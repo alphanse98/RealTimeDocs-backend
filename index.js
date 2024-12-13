@@ -2,10 +2,13 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { Server } = require("socket.io");
 const sequelize = require("./config/database");
 const Document = require("./models/documentModel");
 const documentRote = require("./routes/documentRoutes")
+const userRoute = require("./routes/userRoute")
 
 const app = express();
 const server = http.createServer(app);
@@ -72,7 +75,28 @@ io.on("connection", (socket) => {
   });
 });
 
+// JWT secret key
+// const JWT_SECRET = "thisisaverylongstaticsecretkeyusedfortesting1234567890"; 
+const JWT_SECRET = "c17ec58f4786001f9577140040151fe3615da8a80622196c858c658685035d97"; 
+
+// Middleware to protect routes
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) {
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) {
+          return res.status(403).json({ message: 'Invalid token.' });
+      }
+      req.user = user;
+      next();
+  });
+};
+
 // Route configuration
+app.use("/user", userRoute);
 app.use("/documents", documentRote);
 
 const port = 4000;
