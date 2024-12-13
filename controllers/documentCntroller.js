@@ -2,6 +2,7 @@ const Document = require("../models/documentModel");
 
 exports.createDocument = async (req, res) => {
   try {
+    console.log("upload api cal");
     const { name, doc } = req.body;
     const newDocument = await Document.create({ name, doc });
     res.status(201).json({
@@ -28,27 +29,40 @@ exports.getAllDocuments = async (req, res) => {
   }
 };
 
+exports.deleteDocumentById = async (req, res) => {
+  try {
+    const { id } = req.body;
 
+    await Document.destroy({
+      where: { id },
+    });
 
+    res.status(200).json({
+      message: "Document deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete the document.",
+      error: error.message,
+    });
+  }
+};
 
-exports.updateDocument = async (req, res) => {
-    try {
-      const { id } = req.params; // Get document ID from URL parameters
-        console.log("<<<<<<<<<<<< update >>>", id)
-      // Find the document by ID
-      const document = await Document.findOne({ where: { id } });
-  
-      res.status(200).json({
-        message: "Document updated successfully.",
-        document,
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: "Failed to update document.",
-        error: error.message,
-      });
-    }
-  };
+// exports.updateDocument = async (req, res) => {
+//     try {
+//       const { id } = req.params; // Get document ID from URL parameters
+//         console.log("<<<<<<<<<<<< update >>>", id)
+//       // Find the document by ID
+//       const document = await Document.findOne({ where: { id } });
 
-  
-  
+//       res.status(200).json({
+//         message: "Document updated successfully.",
+//         document,
+//       });
+//     } catch (error) {
+//       res.status(500).json({
+//         message: "Failed to update document.",
+//         error: error.message,
+//       });
+//     }
+//   };
