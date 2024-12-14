@@ -97,7 +97,7 @@ const authenticateToken = (req, res, next) => {
 
 // Route configuration
 app.use("/user", userRoute);
-app.use("/documents", documentRote);
+app.use("/documents",authenticateToken, documentRote);
 
 const port = 4000;
 server.listen(port, () => {
