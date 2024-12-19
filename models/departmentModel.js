@@ -1,20 +1,27 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Document = sequelize.define("Document", {
+const Department = sequelize.define(
+  "Department",
+  {
     id: {
-      type: DataTypes.INTEGER, 
-      primaryKey: true,        
-      autoIncrement: true,    
-      allowNull: false,       
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
     name: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
-    doc: {
+    description: {
       type: DataTypes.TEXT,
+      allowNull: true, // Optional field
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -26,9 +33,11 @@ const Document = sequelize.define("Document", {
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-  }, {
-    tableName: 'Documents',  // Ensure the table name is correct
-    timestamps: true,        // This will automatically add 'createdAt' and 'updatedAt'
-  });
+  },
+  {
+    tableName: "Departments",
+    timestamps: true,
+  }
+);
 
-module.exports = Document;
+module.exports = Department;
