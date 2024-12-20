@@ -5,8 +5,6 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { Server } = require("socket.io");
 const sequelize = require("./config/database");
-const Document = require("./models/documentModel");
-const documentRote = require("./routes/documentRoutes");
 const departmentRote = require("./routes/departmenRoute");
 const employeeRote = require("./routes/employeeRoute");
 const userRoute = require("./routes/userRoute");
@@ -100,9 +98,8 @@ const authenticateToken = (req, res, next) => {
 
 // Route configuration
 app.use("/user", userRoute);
-app.use("/documents", authenticateToken, documentRote);
-app.use("/department", departmentRote);
-app.use("/employee", employeeRote);
+app.use("/department",authenticateToken, departmentRote);
+app.use("/employee",authenticateToken, employeeRote);
 
 const port = 4000;
 server.listen(port, () => {
